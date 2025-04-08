@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS JS Bridge 交互示例</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #message {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>iOS JS Bridge 交互示例</h1>
+        
+        <button onclick="getUserInfo()">获取用户信息</button>
+        <button onclick="showAlert()">显示原生提示框</button>
+        <button onclick="getLocation()">获取位置信息</button>
+        
+        <div id="message">
+            <p>交互信息会显示在这里...</p>
+        </div>
+    </div>
+
+    <script>
+        // 初始化WebViewJavascriptBridge
+        function setupWebViewJavascriptBridge(callback) {
+            if (window.WebViewJavascriptBridge) {
+                return callback(WebViewJavascriptBridge);
+            }
+            if (window.WVJBCallbacks) {
+                return window.WVJBCallbacks.push(callback);
+            }
+            window.WVJBCallbacks = [callback];
+            var WVJBIframe = document.createElement('iframe');
+            WVJBIframe.style.display = 'none';
+            WVJBIframe.src = 'https://__bridge_loaded__';
+            document.documentElement.appendChild(WVJBIframe);
+            setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0);
+        }
+        
+        // 显示消息的函数
+        function showMessage(message) {
+            const messageEl = document.getElementById('message');
+            if (typeof message === 'object') {
+                messageEl.innerHTML = '<pre>' + JSON.stringify(message, null, 2) + '</pre>';
+            } else {
+                messageEl.innerHTML = '<p>' + message + '</p>';
+            }
+            console.log(message);
+        }
+        
+        // 初始化桥接
+        var bridge;
+        setupWebViewJavascriptBridge(function(b) {
+            bridge = b;
+            
+            // 注册JS方法供原生调用
+            bridge.registerHandler('updateUIFromNative', function(data, responseCallback) {
+                showMessage('收到来自iOS的消息: ' + data.message);
+                responseCallback({ received: true });
+            });
+            
+            showMessage('WebViewJavascriptBridge 初始化完成');
+        });
+        
+        // 获取用户信息
+        function getUserInfo() {
+            if (!bridge) {
+                showMessage('JS Bridge未初始化，请稍候再试');
+                return;
+            }
+            
+            showMessage('正在获取用户信息...');
+            
+            // 调用原生方法获取用户信息
+            bridge.callHandler('getUserInfo', {}, function(response) {
+                showMessage(response);
+            });
+        }
+        
+        // 显示原生提示框
+        function showAlert() {
+            if (!bridge) {
+                showMessage('JS Bridge未初始化，请稍候再试');
+                return;
+            }
+            
+            // 调用原生方法显示提示框
+            bridge.callHandler('showAlert', {
+                message: '这是从网页发送的消息，时间: ' + new Date().toLocaleTimeString()
+            }, function(response) {
+                showMessage('提示框已关闭，结果: ' + JSON.stringify(response));
+            });
+        }
+        
+        // 获取位置信息
+        function getLocation() {
+            if (!bridge) {
+                showMessage('JS Bridge未初始化，请稍候再试');
+                return;
+            }
+            
+            showMessage('正在获取位置信息...');
+            
+            // 调用原生方法获取位置
+            bridge.callHandler('getLocation', {}, function(response) {
+                showMessage(response);
+            });
+        }
+    </script>
+</body>
+</html>
