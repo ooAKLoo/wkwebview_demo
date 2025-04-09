@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3DABA6C344957B4BB90944E3 /* Pods_webjsb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26FAB4AABE031540DA6FD0BD /* Pods_webjsb.framework */; };
 		FB3F99342DA42C8E00F30F12 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB3F99332DA42C8E00F30F12 /* WebKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		26FAB4AABE031540DA6FD0BD /* Pods_webjsb.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_webjsb.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9FBFEB14A1F29DBD17651924 /* Pods-webjsb.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-webjsb.release.xcconfig"; path = "Target Support Files/Pods-webjsb/Pods-webjsb.release.xcconfig"; sourceTree = "<group>"; };
+		BE5EE6AECB7032C722955DE6 /* Pods-webjsb.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-webjsb.debug.xcconfig"; path = "Target Support Files/Pods-webjsb/Pods-webjsb.debug.xcconfig"; sourceTree = "<group>"; };
 		FB3F99332DA42C8E00F30F12 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		FBEC05412D9EA8220063B22A /* webjsb.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = webjsb.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -42,16 +46,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB3F99342DA42C8E00F30F12 /* WebKit.framework in Frameworks */,
+				3DABA6C344957B4BB90944E3 /* Pods_webjsb.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8B495046736C8662002DC283 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				BE5EE6AECB7032C722955DE6 /* Pods-webjsb.debug.xcconfig */,
+				9FBFEB14A1F29DBD17651924 /* Pods-webjsb.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		FB3F99322DA42C8E00F30F12 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				FB3F99332DA42C8E00F30F12 /* WebKit.framework */,
+				26FAB4AABE031540DA6FD0BD /* Pods_webjsb.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -62,6 +77,7 @@
 				FBEC05432D9EA8220063B22A /* webjsb */,
 				FB3F99322DA42C8E00F30F12 /* Frameworks */,
 				FBEC05422D9EA8220063B22A /* Products */,
+				8B495046736C8662002DC283 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,9 +96,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FBEC05542D9EA8220063B22A /* Build configuration list for PBXNativeTarget "webjsb" */;
 			buildPhases = (
+				240801FD3436986E00BBC2AC /* [CP] Check Pods Manifest.lock */,
 				FBEC053D2D9EA8220063B22A /* Sources */,
 				FBEC053E2D9EA8220063B22A /* Frameworks */,
 				FBEC053F2D9EA8220063B22A /* Resources */,
+				CE583043609FA75E6AE89817 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -92,8 +110,6 @@
 				FBEC05432D9EA8220063B22A /* webjsb */,
 			);
 			name = webjsb;
-			packageProductDependencies = (
-			);
 			productName = webjsb;
 			productReference = FBEC05412D9EA8220063B22A /* webjsb.app */;
 			productType = "com.apple.product-type.application";
@@ -145,6 +161,52 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		240801FD3436986E00BBC2AC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-webjsb-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CE583043609FA75E6AE89817 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-webjsb/Pods-webjsb-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-webjsb/Pods-webjsb-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-webjsb/Pods-webjsb-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		FBEC053D2D9EA8220063B22A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -158,12 +220,14 @@
 /* Begin XCBuildConfiguration section */
 		FBEC05552D9EA8220063B22A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BE5EE6AECB7032C722955DE6 /* Pods-webjsb.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9YFT3H8S93;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = webjsb/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -188,12 +252,14 @@
 		};
 		FBEC05562D9EA8220063B22A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9FBFEB14A1F29DBD17651924 /* Pods-webjsb.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9YFT3H8S93;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = webjsb/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

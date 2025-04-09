@@ -1,3 +1,6 @@
 webjsb/Assets.xcassets/.DS_Store
 webjsb/.DS_Store
 .DS_Store
+Pods/SnapKit
+Pods/Target Support Files
+Podfile.lock
