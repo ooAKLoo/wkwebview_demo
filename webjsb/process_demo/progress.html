@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>进度条示例</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        .progress-container {
+            margin: 30px 0;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        .start-btn {
+            background-color: #4caf50;
+            color: white;
+        }
+        
+        .start-btn:hover {
+            background-color: #3e8e41;
+        }
+        
+        .stop-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .stop-btn:hover {
+            background-color: #d32f2f;
+        }
+        
+        .get-btn {
+            background-color: #2196f3;
+            color: white;
+        }
+        
+        .get-btn:hover {
+            background-color: #0b7dda;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>原生 App 进度条示例</h1>
+        
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+            <div id="progressText" class="progress-text">0%</div>
+        </div>
+        
+        <div class="buttons">
+            <button class="start-btn" onclick="startProgress()">开始进度</button>
+            <button class="stop-btn" onclick="stopProgress()">停止进度</button>
+            <button class="get-btn" onclick="getProgressFromNative()">获取当前进度</button>
+        </div>
+    </div>
+    
+    <script>
+        // 设置 WKWebViewJavascriptBridge
+        function setupWebViewJavascriptBridge(callback) {
+            if (window.WebViewJavascriptBridge) {
+                return callback(WebViewJavascriptBridge);
+            }
+            if (window.WKWebViewJavascriptBridge) {
+                return callback(WKWebViewJavascriptBridge);
+            }
+            document.addEventListener('WebViewJavascriptBridgeReady', function() {
+                callback(WebViewJavascriptBridge);
+            }, false);
+            
+            // WKWebView 需要特殊处理
+            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.iOS_Native_InjectJavascript) {
+                window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null);
+            }
+        }
+        
+        // 初始化桥接对象
+        let bridge;
+        setupWebViewJavascriptBridge(function(bridgeInstance) {
+            bridge = bridgeInstance;
+            
+            // 注册一个 JS 方法供原生调用，用于更新进度
+            bridge.registerHandler('updateProgress', function(data, responseCallback) {
+                updateProgressUI(data.progress);
+                if (responseCallback) {
+                    responseCallback({ received: true });
+                }
+            });
+            
+            console.log('WKWebViewJavascriptBridge 初始化成功');
+        });
+        
+        // 更新进度条 UI
+        function updateProgressUI(progress) {
+            const percent = Math.round(progress * 100);
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressText').innerText = percent + '%';
+        }
+        
+        // 从原生获取当前进度
+        function getProgressFromNative() {
+            if (!bridge) {
+                alert('桥接尚未初始化！');
+                return;
+            }
+            
+            bridge.callHandler('getProgress', {}, function(response) {
+                updateProgressUI(response.progress);
+                console.log('从原生获取到进度：', response.progress);
+            });
+        }
+        
+        // 开始进度模拟
+        function startProgress() {
+            if (!bridge) {
+                alert('桥接尚未初始化！');
+                return;
+            }
+            
+            bridge.callHandler('startProgress', {}, function(response) {
+                console.log('进度已开始：', response.status);
+            });
+        }
+        
+        // 停止进度模拟
+        function stopProgress() {
+            if (!bridge) {
+                alert('桥接尚未初始化！');
+                return;
+            }
+            
+            bridge.callHandler('stopProgress', {}, function(response) {
+                console.log('进度已停止：', response.status);
+            });
+        }
+    </script>
+</body>
+</html>
